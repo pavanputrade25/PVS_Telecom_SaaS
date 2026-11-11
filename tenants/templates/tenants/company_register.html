@@ -1,0 +1,61 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+    <title>PVS | Company Registration</title>
+    <link rel="stylesheet" href="{% static 'css/pvs-theme.css' %}">
+
+
+</head>
+
+<body>
+
+<header class="header">
+    <h1>PVS Telecom SaaS</h1>
+    <p>Telecom Expense Management Platform</p>
+</header>
+<div class="ribbon">
+    PVS TELECOM EXPENSE MANAGEMENT PLATFORM
+</div>
+<div class="container">
+
+    <h2>Register Your Company</h2>
+
+    <p class="intro">
+        Register your organization to get started with
+        PVS Telecom Expense Management.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        {% for field in form %}
+            <div class="field">
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="submit-btn">
+            Register Company
+        </button>
+    </form>
+
+    <div class="footer">
+        © 2026 Pysoft Virtual Solutions | PVS
+    </div>
+
+</div>
+
+</body>
+</html>

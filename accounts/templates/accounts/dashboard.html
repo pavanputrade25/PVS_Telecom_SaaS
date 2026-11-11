@@ -1,0 +1,565 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PVS Telecom SaaS | Dashboard</title>
+
+    <link rel="stylesheet" href="{% static 'css/pvs-theme.css' %}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #F4F6FA;
+            color: #26364A;
+        }
+
+        .app-header {
+            height: 70px;
+            background: #173B70;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            border-bottom: 4px solid #C49A35;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .brand span {
+            color: #FFF44F;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .welcome-user {
+            color: #FFFFFF;
+            font-size: 14px;
+        }
+
+        .logout-button {
+            background: #FFF44F;
+            color: #102B50;
+            border: 2px solid #C49A35;
+            padding: 9px 18px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background: #F5D900;
+        }
+
+        .ribbon {
+            background: #FFF44F;
+            color: #102B50;
+            text-align: center;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            border-bottom: 2px solid #C49A35;
+        }
+
+        .app-layout {
+            display: flex;
+            min-height: calc(100vh - 112px);
+        }
+
+        .sidebar {
+            width: 255px;
+            flex-shrink: 0;
+            background: #102B50;
+            padding: 22px 12px;
+            border-right: 3px solid #C49A35;
+        }
+
+        .sidebar-title {
+            color: #FFF44F;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 5px 12px 18px;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 12px;
+            margin-bottom: 5px;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: #254D7C;
+            color: #FFF44F;
+        }
+
+        .nav-link.active {
+            background: #FFF44F;
+            color: #102B50;
+            font-weight: bold;
+            border-left: 4px solid #C49A35;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+        }
+
+        .page-title {
+            color: #173B70;
+            font-size: 26px;
+            margin: 0 0 8px;
+        }
+
+        .page-subtitle {
+            color: #718096;
+            margin-bottom: 28px;
+            font-size: 14px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 2px solid #C49A35;
+            border-radius: 10px;
+            padding: 22px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .stat-card h3 {
+            color: #718096;
+            font-size: 13px;
+            margin: 0 0 15px;
+        }
+
+        .stat-value {
+            color: #173B70;
+            font-size: 27px;
+            font-weight: bold;
+        }
+
+        .workspace-card {
+            background: white;
+            border: 2px solid #C49A35;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .workspace-card h3 {
+            color: #173B70;
+            margin-top: 0;
+        }
+
+        .module-message {
+            color: #718096;
+            line-height: 1.7;
+        }
+
+        .module-page {
+            display: none;
+        }
+
+        .module-page.active-page {
+            display: block;
+        }
+
+        .module-badge {
+            display: inline-block;
+            background: #FFF44F;
+            color: #102B50;
+            padding: 7px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .app-footer {
+            text-align: center;
+            color: #718096;
+            padding: 18px;
+            font-size: 12px;
+            border-top: 1px solid #C49A35;
+        }
+
+        @media(max-width: 1050px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 700px) {
+            .app-header {
+                height: auto;
+                padding: 15px;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .app-layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 3px solid #C49A35;
+            }
+
+            .sidebar nav {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 5px;
+            }
+
+            .nav-link {
+                font-size: 12px;
+                padding: 10px 7px;
+                margin: 0;
+            }
+
+            .main-content {
+                padding: 18px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-value {
+                font-size: 21px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="app-header">
+
+    <div class="brand">
+        PVS <span>TELECOM SAAS</span>
+    </div>
+
+    <div class="header-right">
+
+        <div class="welcome-user">
+            Welcome, {{ request.user.username }}
+        </div>
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-button">
+                Logout
+            </button>
+        </form>
+
+    </div>
+
+</header>
+
+<div class="ribbon">
+    TELECOM EXPENSE MANAGEMENT PLATFORM
+</div>
+
+<div class="app-layout">
+
+    <!-- LEFT NAVIGATION SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-title">
+            APPLICATION MENU
+        </div>
+
+        <nav>
+
+            <a href="#dashboard" class="nav-link active" data-page="dashboard">
+                <span class="nav-icon">▦</span> Dashboard
+            </a>
+
+            <a href="#clients" class="nav-link" data-page="clients">
+                <span class="nav-icon">♙</span> Client Management
+            </a>
+
+            <a href="#invoices" class="nav-link" data-page="invoices">
+                <span class="nav-icon">▤</span> Invoice Management
+            </a>
+
+            <a href="#validation" class="nav-link" data-page="validation">
+                <span class="nav-icon">✓</span> Invoice Validation
+            </a>
+
+            <a href="#auditing" class="nav-link" data-page="auditing">
+                <span class="nav-icon">⌕</span> Invoice Auditing
+            </a>
+
+            <a href="#inventory" class="nav-link" data-page="inventory">
+                <span class="nav-icon">▣</span> Inventory Management
+            </a>
+
+            <a href="#optimization" class="nav-link" data-page="optimization">
+                <span class="nav-icon">↗</span> Expense Optimization
+            </a>
+
+            <a href="#vendors" class="nav-link" data-page="vendors">
+                <span class="nav-icon">♧</span> Vendor Management
+            </a>
+
+            <a href="#orders" class="nav-link" data-page="orders">
+                <span class="nav-icon">☷</span> Order Management
+            </a>
+
+            <a href="#reports" class="nav-link" data-page="reports">
+                <span class="nav-icon">▥</span> Reports & Analytics
+            </a>
+
+            <a href="#users" class="nav-link" data-page="users">
+                <span class="nav-icon">♧</span> User Management
+            </a>
+
+            <a href="#settings" class="nav-link" data-page="settings">
+                <span class="nav-icon">⚙</span> Company Settings
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN WORKSPACE -->
+
+    <main class="main-content">
+
+        <!-- DASHBOARD PAGE -->
+
+        <section id="dashboard" class="module-page active-page">
+
+            <h1 class="page-title">Dashboard</h1>
+
+            <p class="page-subtitle">
+                Welcome to your PVS Telecom Management Workspace.
+            </p>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <h3>Total Invoices</h3>
+                    <div class="stat-value">--</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Total Telecom Expenses</h3>
+                    <div class="stat-value">--</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Active Inventory</h3>
+                    <div class="stat-value">--</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Potential Savings</h3>
+                    <div class="stat-value">--</div>
+                </div>
+
+            </div>
+
+            <div class="workspace-card">
+                <h3>Welcome to PVS Telecom SaaS</h3>
+                <p class="module-message">
+                    Manage telecom invoices, vendors, inventory,
+                    orders, expenses and business reporting from
+                    one centralized platform.
+                </p>
+                <span class="module-badge">PVS Enterprise Platform</span>
+            </div>
+
+        </section>
+
+
+        <!-- OTHER MODULE PAGES -->
+
+        <section id="clients" class="module-page">
+            <h1 class="page-title">Client Management</h1>
+            <div class="workspace-card">
+                <h3>Client Accounts</h3>
+                <p class="module-message">Manage client companies, account details and customer information.</p>
+                <span class="module-badge">Module planned</span>
+            </div>
+        </section>
+
+        <section id="invoices" class="module-page">
+            <h1 class="page-title">Invoice Management</h1>
+            <div class="workspace-card">
+                <h3>Telecom Invoice Processing</h3>
+                <p class="module-message">Upload, register, track and process telecom vendor invoices.</p>
+                <span class="module-badge">Module planned</span>
+            </div>
+        </section>
+
+        <section id="validation" class="module-page">
+            <h1 class="page-title">Invoice Validation</h1>
+            <div class="workspace-card">
+                <h3>Invoice Validation Workspace</h3>
+                <p class="module-message">Validate invoice charges against contracts, rates, usage and service details.</p>
+                <span class="module-badge">Module planned</span>
+            </div>
+        </section>
+
+        <section id="auditing" class="module-page">
+            <h1 class="page-title">Invoice Auditing</h1>
+            <div class="workspace-card">
+                <h3>Telecom Expense Audit</h3>
+                <p class="module-message">Identify billing errors, duplicate charges, incorrect taxes and billing deviations.</p>
+                <span class="module-badge">Module planned</span>
+            </div>
+        </section>
+
+        <section id="inventory" class="module-page">
+            <h1 class="page-title">Inventory Management</h1>
+            <div class="workspace-card">
+                <h3>Telecom Inventory</h3>
+                <p class="module-message">Manage circuits, wireless services, wireline services and telecom assets.</p>
+                <span class="module-badge">Module planned</span>
+            </div>
+        </section>
+
+        <section id="optimization" class="module-page">
+            <h1 class="page-title">Expense Optimization</h1>
+            <div class="workspace-card">
+                <h3>Cost Optimization</h3>
+                <p class="module-message">Identify savings opportunities, unused services and suitable telecom plans.</p>
+                <span class="module-badge">Module planned</span>
+            </div>
+        </section>
+
+        <section id="vendors" class="module-page">
+            <h1 class="page-title">Vendor Management</h1>
+            <div class="workspace-card">
+                <h3>Telecom Vendors</h3>
+                <p class="module-message">Manage vendor profiles, contracts, contacts and service information.</p>
+                <span class="module-badge">Module planned</span>
+            </div>
+        </section>
+
+        <section id="orders" class="module-page">
+            <h1 class="page-title">Order Management</h1>
+            <div class="workspace-card">
+                <h3>Telecom Order Tracking</h3>
+                <p class="module-message">Track service orders, provisioning, vendor updates and order completion.</p>
+                <span class="module-badge">Module planned</span>
+            </div>
+        </section>
+
+        <section id="reports" class="module-page">
+            <h1 class="page-title">Reports & Analytics</h1>
+            <div class="workspace-card">
+                <h3>Business Intelligence</h3>
+                <p class="module-message">View invoice reports, expense trends, inventory reports and savings analysis.</p>
+                <span class="module-badge">Module planned</span>
+            </div>
+        </section>
+
+        <section id="users" class="module-page">
+            <h1 class="page-title">User Management</h1>
+            <div class="workspace-card">
+                <h3>Application Users</h3>
+                <p class="module-message">Manage users, company memberships, roles and access permissions.</p>
+                <span class="module-badge">Module planned</span>
+            </div>
+        </section>
+
+        <section id="settings" class="module-page">
+            <h1 class="page-title">Company Settings</h1>
+            <div class="workspace-card">
+                <h3>Organization Configuration</h3>
+                <p class="module-message">Configure company profile, preferences and application settings.</p>
+                <span class="module-badge">Module planned</span>
+            </div>
+        </section>
+
+    </main>
+
+</div>
+
+<footer class="app-footer">
+    © 2026 Pysoft Virtual Solutions | PVS Telecom SaaS
+</footer>
+
+
+<script>
+    const menuLinks = document.querySelectorAll(".nav-link");
+    const modulePages = document.querySelectorAll(".module-page");
+
+    menuLinks.forEach(function(link) {
+
+        link.addEventListener("click", function(event) {
+
+            event.preventDefault();
+
+            const selectedPage = this.getAttribute("data-page");
+
+            menuLinks.forEach(function(item) {
+                item.classList.remove("active");
+            });
+
+            modulePages.forEach(function(page) {
+                page.classList.remove("active-page");
+            });
+
+            this.classList.add("active");
+
+            document.getElementById(selectedPage)
+                .classList.add("active-page");
+
+        });
+
+    });
+</script>
+
+</body>
+</html>
